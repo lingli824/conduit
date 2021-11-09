@@ -18,4 +18,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: echo "Great Job, Its Building"
+      - run: 
+          pwd
+          cd conduit/backend
+          npm install
+          npm test
