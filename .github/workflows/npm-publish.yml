@@ -20,6 +20,7 @@ jobs:
           node-version: 12
       - run: 
           pwd
-          cd conduit/backend
+          ls -la
+          cd backend
           npm install
           npm test
