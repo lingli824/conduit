@@ -25,4 +25,18 @@ jobs:
           npm install
           npm test
           
- 
+ deploy:
+  needs: [ test]
+  runs-on: ubuntu-latest
+  
+  step:
+  - name: executing remote ssh commands using password
+    uses: appleboy/ssh-action@master
+    with:
+      host: ${{ secrets.${GITHUB_REF}_HOST }}
+      username: ubuntu
+      key: ${{ secrets.KEY }}
+      port: 22
+      script: |
+        cd conduit
+        git pull
