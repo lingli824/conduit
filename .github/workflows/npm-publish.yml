@@ -11,8 +11,9 @@ on:
       - development
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -24,19 +25,21 @@ jobs:
           cd backend
           npm install
           npm test
-          
- deploy:
-  needs: [ test]
-  runs-on: ubuntu-latest
-  
-  step:
-  - name: executing remote ssh commands using password
-    uses: appleboy/ssh-action@master
-    with:
-      host: ${{ secrets.${GITHUB_REF}_HOST }}
-      username: ubuntu
-      key: ${{ secrets.KEY }}
-      port: 22
-      script: |
-        cd conduit
-        git pull
+
+  deploy:
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ubuntu
+        key: ${{ secrets.KEY }}
+        port: 22
+        script: |
+          ls -la
+          cd conduit
+          git pull
+        if: github.ref == 'refs/heads/staging'
